@@ -1,0 +1,160 @@
+## Number of NEAT1 chains in simulation
+Npolymer,20
+## Length of polymer (ie. number of monomers in NEAT1 chain)
+L,45
+## Length of polymer ends (ie. number of monomers to represent the 5' and 3' ends)
+LE,15
+## Length of polymer middle (ie. number of monomers to represent the middle section)
+LM,15
+
+##Box, length of each x,y,z coordinate
+Lbox,150
+
+##seeds
+#flag to use a random seed for md simulation trajectories
+usemdseed,1
+#trajectory seed
+mdseed,11
+
+
+#initialization seed for random walks of NEAT1
+seed,11
+
+
+##calculate flexbox or fixedbox.
+#Use this to determine volume fractions: fixedbox
+#Or use this to determine box size: flexbox
+vcalc,fixedbox
+
+##Spacing of RNA (to be divided into box length)
+spacing,24
+
+## Number of proteins
+Nproteins,12000
+
+## Volume fraction of RNA and proteins
+#if fixedbox, this is calculated and stored
+#if flexbox, this is an input and kept constant
+vrna,1e-4
+
+## Volume fraction of proteins
+vproteins,1e-5
+
+##Number of proteins in simulation
+#NONO
+vP1,4000
+#FUS
+vP2,4000
+#TDP43
+vP3,4000
+
+##Harmonic bond parameters
+#spring constant
+hk,500
+#bond length
+r0,1.00
+
+##Lennard Jones parameters
+#radial cut-off
+r_cut,2.5
+
+## RNA-RNA ##
+#Middle-Middle NEAT1 sigma
+Msigma,1
+#Middle-Middle NEAT1 epsilon
+Mep,2
+#5'/3'-5'/3' NEAT1 sigma
+Esigma,1
+#5'/3'-5'/3' NEAT1 epsilon
+Eep,0.01
+#Middle-5'/3' NEAT1 sigma
+EMsigma,1
+#Middle-5'/3' NEAT1 epsilon
+EMep,0.01
+
+## Protein-Protein ##
+#NONO-NONO epsilon
+P1ep,2.5
+
+#FUS-FUS epsilon
+P2ep,2.5
+
+#TDP-43-TDP-43 epsilon
+P3ep,2.5
+
+#NONO-FUS epsilon
+P12ep,2.5
+
+#NONO-TDP-43 epsilon
+P13ep,0.01
+
+#FUS-TDP-43 epsilon
+P23ep,0.01
+
+#Protein-Protein sigma
+Psigma,0.5
+
+## Protein-RNA ##
+#NONO-Middle NEAT1 epsilon
+P1Mep,2
+#FUS-Middle NEAT1 epsilon
+P2Mep,2
+#TDP43-Middle NEAT1 epsilon
+P3Mep,0.01
+#Protein-Middle RNA sigma
+PMsigma,0.75
+
+#NONO-5' epsilon
+P1E1ep,2
+#NONO-3' epsilon
+P1E2ep,2
+#FUS-5' epsilon
+P2E1ep,2.5
+#FUS-3' epsilon
+P2E2ep,2.5
+#TDP-43-5' epsilon
+P3E1ep,2
+#TDP-43-3' epsilon
+P3E2ep,2
+#PRotein-5'/3' RNA sigma
+PEsigma,0.75
+
+##Logging Data
+#steps between snapshops
+initialperiod,100
+finalperiod,100
+
+#time step
+dt,8e-3
+
+#number of steps
+firsthalf,1e4
+secondhalf,1e4
+
+##MD seed
+mdseed,1
+
+##Folder convention
+#Initial State File path and name
+InitialStateFilePath, ../Data/Inputs/folder_name/date/Initialstates/RNA.gsd
+
+#WalkType
+#the type of walk for initializing NEAT1
+WalkType,multiplewalks
+
+# Job input file for quest and documentation
+JobInputName,../Data/Outputs/folder_name/date/Initialstates/RNA
+
+#Trajectory file path and name
+TrajectoryFilePath, ../Data/Outputs/folder_name/date/Trajectories/RNA_trajectory.gsd
+
+#DataAnalysis path
+DataAnalysis, ../Data/Outputs/folder_name/date/Trajectories/RNA_data.csv
+
+#Interaction Matrix used for job input parameters
+InterMatrix, ../Code/Inputs/Intermatrix/date/name.csv
+
+
+
+
+
