@@ -346,3 +346,92 @@ def plot_data(folder,name,plot_LC=True,save=False,oldmodel=False,datecheck=None)
                     print(f"Data file not found for {avg_file}")
             else:
                 print(f"Average file not found for {subfolders}")
+
+
+def plot_den_alltrajs_density(trajs, avg, oldmodel=False, std=True):
+    """Plot intensity by species with optional standard deviation.
+
+    Args:
+    - trajs (str): Path to the trajectory data file (pickle format).
+    - avg (str): Path to the average data file (pickle format).
+    - oldmodel (bool): Whether to exclude certain species (e.g., P3) for old models.
+    - std (bool): Whether to plot standard deviation (default: True).
+    """
+    # Load data
+    data = pickle.load(open(trajs, 'rb'))
+    avgdata = pickle.load(open(avg, 'rb'))
+
+    # Define color and name mappings for species
+    color_dict = {
+        'M_rdf': 'deeppink',
+        'E1_rdf': 'yellowgreen',
+        'E2_rdf': 'darkgreen',
+        'P1_rdf': '#8C510A',
+        'P2_rdf': '#5E918B',
+        'P3_rdf': '#805D94'
+    }
+    name_dict = {
+        'M_rdf': 'M',
+        'E1_rdf': "5'",
+        'E2_rdf': "3'",
+        'P1_rdf': 'NONO',
+        'P2_rdf': 'FUS',
+        'P3_rdf': 'TDP43'
+    }
+
+    # Create subplots for each species
+    if oldmodel:
+        figure, axes = plt.subplots(1, len(color_dict) - 1, figsize=(24, 4))
+    else:
+        figure, axes = plt.subplots(1,len(color_dict), figsize=(24, 4))
+    for seed in data.keys():
+        i = 0
+        for key in data[seed].keys():
+            if key.endswith('rdf'):
+                if oldmodel and key == 'P3_rdf':
+                    continue  # Skip P3 for old models if specified
+
+                # Plot average data
+                axes[i].plot(
+                    avgdata[key.split('_')[0] + '_bin'][-1],
+                    avgdata[key][-1],
+                    color='k',
+                    linestyle='--',
+                    linewidth=2,
+                    label='Avg'
+                )
+
+                # Plot standard deviation if enabled
+                if std:
+                    # Calculate standard deviation
+                    avg_values = np.array([data[s][key][-1] for s in data.keys()])
+                    std_dev = np.std(avg_values, axis=0)
+
+                    # Plot shaded region for standard deviation
+                    axes[i].fill_between(
+                        avgdata[key.split('_')[0] + '_bin'][-1],
+                        np.maximum(avgdata[key][-1] - std_dev,0),
+                        avgdata[key][-1] + std_dev,
+                        color=color_dict[key],
+                        alpha=0.1,
+                        label='Std. Dev.'
+                    )
+
+                # Set plot title and limits
+                axes[i].set_title(f'{name_dict[key]} Profile')
+                axes[i].set_xlim(0, 1)
+
+                # Ensure unique legend entries
+                handles, labels = axes[i].get_legend_handles_labels()
+                by_label = dict(zip(labels, handles))
+                axes[i].legend(by_label.values(), by_label.keys(),loc='best')
+                i += 1
+
+    # Adjust layout and add labels
+    figure.tight_layout(rect=[0.03, 0.05, 0.90, 0.90])
+    figure.supxlabel('Normalized Distance from Center')
+    figure.supylabel('Number Density')
+
+    # Show the plot
+    plt.show()
+
